@@ -1,15 +1,18 @@
 import { useState } from "react";
 import "./AddExpense.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../../../components/Toasts/ErrorMessage";
 
 const AddExpense = () => {
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [comments, setComments] = useState("N.A.");
+  const [flag, setFlag] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    setFlag(false);
     e.preventDefault();
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses`, {
@@ -27,6 +30,7 @@ const AddExpense = () => {
 
       if (!response.ok) {
         // Handle error responses
+        setFlag(true);
         const errorData = await response.json();
         throw new Error(errorData.message || "Error in Adding Expense");
       }
@@ -75,6 +79,7 @@ const AddExpense = () => {
         </div>
         <button type="submit">Add Expense</button>
       </form>
+      {flag && <ErrorMessage />}
     </div>
   );
 };

@@ -45,6 +45,7 @@ const Home = () => {
         }
 
         const data = await response.json();
+        console.log(data);
         setExpenseData(data.expense);
       } else {
         navigate("/login");

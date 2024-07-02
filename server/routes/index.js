@@ -6,7 +6,8 @@ const { authToken } = require("../helpers/jwt-token");
 const { addExpense,
     getExpense,
     updateExpense,
-    deleteExpense
+    deleteExpense,
+    getExpenseByCategory
 } = require("../controllers/expense");
 
 const router = express.Router();
@@ -22,5 +23,8 @@ router.post("/expenses", validateAddExpenseData, addExpense);
 router.get("/expenses", getExpense);
 router.patch("/expenses/:expenseID", validateUpdateExpenseData, updateExpense);
 router.delete("/expenses/:expenseID", deleteExpense);
+
+// charts
+router.get("/expenses/chart", getExpenseByCategory);
 
 module.exports = router;

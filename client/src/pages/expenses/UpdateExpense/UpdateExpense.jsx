@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./UpdateExpense.css"; // Import the CSS file for styling
+import ErrorMessage from "../../../components/Toasts/ErrorMessage";
 
 const UpdateExpense = () => {
   const navigate = useNavigate();
@@ -11,8 +12,10 @@ const UpdateExpense = () => {
   const [category, setCategory] = useState(data.category);
   const [amount, setAmount] = useState(data.amount);
   const [comments, setComments] = useState(data.comments);
+  const [flag, setFlag] = useState(false);
 
   const handleSubmit = async (e) => {
+    setFlag(false);
     e.preventDefault();
     try {
       const response = await fetch(
@@ -32,6 +35,7 @@ const UpdateExpense = () => {
       );
 
       if (!response.ok) {
+        setFlag(true);
         // Handle error responses
         const errorData = await response.json();
         throw new Error(errorData.message || "Error in Editing Expense");
@@ -80,6 +84,7 @@ const UpdateExpense = () => {
         </div>
         <button type="submit">Update Expense</button>
       </form>
+      {flag && <ErrorMessage />}
     </div>
   );
 };

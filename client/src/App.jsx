@@ -23,8 +23,18 @@ function App() {
           exact
           element={localStorage.getItem("token") ? <Home /> : <Signup />}
         />
-        <Route path="/add-expense" exact element={<AddExpense />} />
-        <Route path="/update-expense/:id" exact element={<UpdateExpense />} />
+        <Route
+          path="/add-expense"
+          exact
+          element={localStorage.getItem("token") ? <AddExpense /> : <Signup />}
+        />
+        <Route
+          path="/update-expense/:id"
+          exact
+          element={
+            localStorage.getItem("token") ? <UpdateExpense /> : <Signup />
+          }
+        />
       </Routes>
     </div>
   );

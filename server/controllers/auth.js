@@ -35,7 +35,6 @@ const loginUser = async (req, res) => {
         }
 
         const access_token = await generateToken(existingUser._id, email);
-        // return res.cookie('token', access_token, { httpOnly: true }).send();
         return res.json({ token: access_token })
     } catch (error) {
         console.log(error);

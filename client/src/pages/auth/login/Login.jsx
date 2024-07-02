@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"; // Import the CSS file for styling
+import ErrorMessage from "../../../components/Toasts/ErrorMessage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [flag, setFlag] = useState(false);
   const navigate = useNavigate("/");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setFlag(false);
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/auth/login`,
         {
@@ -27,6 +30,7 @@ const Login = () => {
       if (!response.ok) {
         // Handle error responses
         const errorData = await response.json();
+        setFlag(true);
         throw new Error(errorData.message || "Login failed");
       }
       const responseData = await response.json();
@@ -58,7 +62,9 @@ const Login = () => {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             required
           />
         </div>
@@ -67,6 +73,7 @@ const Login = () => {
       <p className="signup-message">
         Don&apos;t have an account? <Link to="/signup">Signup</Link>
       </p>
+      {flag && <ErrorMessage />}
     </div>
   );
 };

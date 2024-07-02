@@ -27,6 +27,34 @@ const getExpense = async (req, res) => {
     }
 }
 
+const getExpenseByCategory = async (req, res) => {
+    try {
+        const { userID } = req?.body;
+        // Fetch all expenses for the user
+
+        const expenses = await Expense.find({ userID: userID }, { category: 1, amount: 1 });
+
+        // Process data to group by category and sum the amounts
+        const expensesByCategory = expenses.reduce((acc, expense) => {
+            if (!acc[expense.category]) {
+                acc[expense.category] = 0;
+            }
+            acc[expense.category] += expense.amount;
+            return acc;
+        }, {});
+
+        // Convert the result into the desired format
+        const result = Object.keys(expensesByCategory).map(category => ({
+            category: category,
+            totalAmount: expensesByCategory[category]
+        }));
+        console.log(result);
+        return res.status(201).json({ expense: result });
+    } catch (error) {
+        return res.status(500).json({ error: "Internal server error" })
+    }
+}
+
 const updateExpense = async (req, res) => {
     try {
         const { userID, category, amount, comments } = req.body;
@@ -68,6 +96,7 @@ const deleteExpense = async (req, res) => {
 module.exports = {
     addExpense,
     getExpense,
+    getExpenseByCategory,
     updateExpense,
-    deleteExpense
+    deleteExpense,
 };

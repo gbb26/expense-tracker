@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css"; // Import the CSS file for styling
+import ErrorMessage from "../../../components/Toasts/ErrorMessage";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [flag, setFlag] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    setFlag(false);
     e.preventDefault();
     if (password !== confirmPassword) {
       console.error("Passwords do not match");
@@ -35,6 +38,7 @@ const Signup = () => {
 
       if (!response.ok) {
         // Handle error responses
+        setFlag(true);
         const errorData = await response.json();
         throw new Error(errorData.message || "Signup failed");
       }
@@ -97,6 +101,7 @@ const Signup = () => {
       <p className="login-message">
         Already have an account? <Link to="/login">Login</Link>
       </p>
+      {flag && <ErrorMessage />}
     </div>
   );
 };
